@@ -1,5 +1,9 @@
 # A small veterinary clinic is in need of an application to allow their users to contact them easily and for them to provide information to their users about their pets
 
+#### Sample API:
+https://jsonkeeper.com/b/PN84 - config
+https://jsonkeeper.com/b/7GTA - pets
+
 ### Implement this app with the following requirements:
 - Fetch the [config.json](/task/config.json) to check for chat and call feature availability and work hours
 - Call and/or chat buttons are at the top (see wireframe):
