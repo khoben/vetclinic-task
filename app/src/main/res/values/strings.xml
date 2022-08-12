@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Vet Clinic</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+    <string name="office_hours">Office Hours: %1$s</string>
+    <string name="ok">OK</string>
+    <string name="alert_title">Alert</string>
+    <string name="alert_working_hours">Thank you for getting in touch with us. We’ll get back to you as soon as possible</string>
+    <string name="alert_not_working_hours">Work hours has ended. Please contact us again on the next work day</string>
+    <string name="pet_image">Pet image</string>
+    <string name="generic_error">Error: %1$s</string>
+    <string name="error_ntry_restart_app">Error\nTry restart app</string>
+</resources>

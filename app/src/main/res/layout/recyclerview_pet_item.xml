@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/pet_item_padding"
+    android:paddingBottom="@dimen/pet_item_padding">
+
+    <ImageView
+        android:id="@+id/pet_image"
+        android:layout_width="@dimen/pet_image_size"
+        android:layout_height="@dimen/pet_image_size"
+        android:contentDescription="@string/pet_image"
+        android:scaleType="fitCenter"
+        tools:src="@drawable/ic_launcher_foreground" />
+
+    <TextView
+        android:id="@+id/pet_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/default_padding"
+        android:gravity="center_vertical"
+        android:textAppearance="@style/App.TextAppearance.PetInfo"
+        tools:text="Pet info" />
+
+</LinearLayout>

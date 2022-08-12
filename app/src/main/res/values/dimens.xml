@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_padding">16dp</dimen>
+    <dimen name="block_padding">16dp</dimen>
+    <dimen name="default_padding">16dp</dimen>
+    <dimen name="big_button_size">60dp</dimen>
+    <dimen name="pet_image_size">60dp</dimen>
+    <dimen name="pet_item_padding">8dp</dimen>
+</resources>
