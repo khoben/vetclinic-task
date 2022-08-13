@@ -1,5 +1,6 @@
 package com.vetclinic.app.ui.list
 
+import android.util.Log
 import com.vetclinic.app.R
 import com.vetclinic.app.common.observer.SingleEventLiveData
 import com.vetclinic.app.common.observer.SingleStateLiveData
@@ -7,8 +8,6 @@ import com.vetclinic.app.common.ui.Presenter
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.usecase.FetchConfigUseCase
-import com.vetclinic.app.domain.usecase.FetchPetsUseCase
 import com.vetclinic.app.domain.workinghours.CheckWorkingHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
@@ -43,13 +42,23 @@ class PetListPresenter(
         if (alreadyFetched) return
         alreadyFetched = true
 
+        Log.d("TEST_PRESENTER", "fetchData called")
+
         fetchConfigUseCase.invoke({
+            Log.d("TEST_PRESENTER", "fetchedData: $it")
             _configObserver.emit(it)
-        }, { _errors.emit(it) })
+        }, {
+            Log.e("TEST_PRESENTER", "Error: $it")
+            _errors.emit(it)
+        })
 
         fetchPetsUseCase.invoke({
+            Log.d("TEST_PRESENTER", "fetchedData: $it")
             _listObserver.emit(it)
-        }, { _errors.emit(it) })
+        }, {
+            Log.e("TEST_PRESENTER", "Error: $it")
+            _errors.emit(it)
+        })
     }
 
     fun routeToPet(petUri: String, petTitle: String) {

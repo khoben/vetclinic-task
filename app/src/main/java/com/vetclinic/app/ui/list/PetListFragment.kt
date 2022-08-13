@@ -17,6 +17,7 @@ import com.vetclinic.app.domain.workinghours.CheckWorkingHours
 import com.vetclinic.app.domain.workinghours.CurrentHour
 import com.vetclinic.app.domain.workinghours.ParseWorkingHours
 import com.vetclinic.app.ui.base.BaseFragment
+import com.vetclinic.app.ui.pet.PetFragment
 
 
 class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresenter>() {
@@ -25,9 +26,9 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
 
     override fun presenterFactory(): PetListPresenter = PetListPresenter(
         di.navigation,
-        FetchConfigUseCase(di.configHttpService, ConfigMapper(ParseWorkingHours.Base())),
-        FetchPetsUseCase(di.petHttpService, PetListMapper()),
-        CheckWorkingHours.Base(CurrentHour.Base())
+        di.fetchConfigUseCase,
+        di.fetchPetsUseCase,
+        di.checkWorkingHours
     )
 
     override fun getViewBinding(
@@ -72,8 +73,8 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
         petListPresenter.listObserver.observe { petAdapter.submitList(it) }
         petListPresenter.showAlert.observe { showAlert(it.title, it.message) }
         petListPresenter.errors.observe {
-            showToast(getString(R.string.generic_error, it.message))
             binding.errorsLayout.isVisible = true
+            showToast(getString(R.string.generic_error, it.message))
         }
 
         petListPresenter.fetchData()
