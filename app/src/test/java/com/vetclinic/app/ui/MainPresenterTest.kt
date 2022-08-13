@@ -1,5 +1,6 @@
 package com.vetclinic.app.ui
 
+import com.vetclinic.app.common.observer.SingleEventLiveData
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
 import org.junit.Assert
@@ -14,9 +15,7 @@ class MainPresenterTest {
 
     @Test
     fun testNavigation() {
-        presenter.navigationObserver.observe {
-            Assert.assertEquals(screen, it)
-        }
         navigation.to(screen)
+        Assert.assertEquals(screen, (presenter.navigationObserver as SingleEventLiveData).lastEmittedData)
     }
 }
