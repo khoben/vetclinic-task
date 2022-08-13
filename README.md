@@ -5,6 +5,13 @@
 
 - https://jsonkeeper.com/b/7GTA - pets
 
+#### Screenshots:
+<p>
+  <div style='float: center'>
+      <img style='height: 460px' src="./README.md-images/result.jpg"/>
+  </div>
+</p>
+
 ### Implement this app with the following requirements:
 - Fetch the [config.json](/task/config.json) to check for chat and call feature availability and work hours
 - Call and/or chat buttons are at the top (see wireframe):
