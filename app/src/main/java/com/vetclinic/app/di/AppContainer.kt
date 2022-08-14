@@ -2,12 +2,13 @@ package com.vetclinic.app.di
 
 import android.content.Context
 import com.vetclinic.app.R
-import com.vetclinic.app.common.fetchimage.*
+import com.vetclinic.app.common.fetchimage.FetchImage
 import com.vetclinic.app.common.fetchimage.cache.ImageCache
 import com.vetclinic.app.common.fetchimage.cache.KeyHash
 import com.vetclinic.app.common.fetchimage.decode.ComputeScale
 import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import com.vetclinic.app.common.fetchimage.decode.TempFile
+import com.vetclinic.app.common.fetchimage.strategy.ImageLoadStrategy
 import com.vetclinic.app.common.fetchimage.target.GetTargetSize
 import com.vetclinic.app.common.network.HttpService
 import com.vetclinic.app.common.ui.UseCase
@@ -73,19 +74,25 @@ class AppContainer(appContext: Context) : DiContainer {
     override val fetchImage: FetchImage by lazy {
         FetchImage.Base(
             placeholder = R.drawable.ic_launcher_foreground,
-            okHttpClient = provideOkHttpClient(),
-            getTargetSize = GetTargetSize.ViewTarget(),
-            memoryCache = ImageCache.MemoryImageCache(),
-            persistenceCache = ImageCache.FileImageCache(
-                context = appContext,
-                keyHash = KeyHash.MD5(),
-                imageDecoder = ImageDecoder.FileDecoder()
+            loadStrategy = ImageLoadStrategy.Memory(
+                memoryCache = ImageCache.MemoryImageCache(),
+                next = ImageLoadStrategy.Persistence(
+                    persistenceCache = ImageCache.FileImageCache(
+                        context = appContext,
+                        keyHash = KeyHash.MD5(),
+                        imageDecoder = ImageDecoder.FileDecoder()
+                    ),
+                    executorService = executorService,
+                    next = ImageLoadStrategy.Remote(
+                        okHttpClient = provideOkHttpClient(),
+                        streamImageDecoder = ImageDecoder.StreamDecoder(
+                            tempFile = TempFile.Cache(appContext),
+                            computeScale = ComputeScale.Factor2()
+                        )
+                    )
+                )
             ),
-            streamImageDecoder = ImageDecoder.StreamDecoder(
-                tempFile = TempFile.Cache(appContext),
-                computeScale = ComputeScale.Factor2()
-            ),
-            executorService = executorService
+            getTargetSize = GetTargetSize.ViewTarget()
         )
     }
 
