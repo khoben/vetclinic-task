@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 abstract class PresenterFragment<P : Presenter> : Fragment(), PresenterKey {
 
     private var presenterStore: PresenterStore? = null
+    private val bagOfDestroyable = mutableListOf<WithLifecycle>()
 
     protected abstract fun presenterFactory(): P
 
@@ -18,11 +19,24 @@ abstract class PresenterFragment<P : Presenter> : Fragment(), PresenterKey {
         return presenter as P
     }
 
+    /**
+     * Should destroy on onDestroyView()
+     */
+    fun destroyable(destroyable: WithLifecycle) {
+        bagOfDestroyable.add(destroyable)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is PresenterActivity<*>) {
             presenterStore = context.getPresenterStore()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bagOfDestroyable.forEach(WithLifecycle::onDestroy)
+        bagOfDestroyable.clear()
     }
 
     override fun onDestroy() {

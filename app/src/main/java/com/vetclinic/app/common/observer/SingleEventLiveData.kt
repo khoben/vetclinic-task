@@ -1,27 +1,40 @@
 package com.vetclinic.app.common.observer
 
 import com.vetclinic.app.common.ui.UiExecutor
-import android.os.Looper
+import com.vetclinic.app.common.ui.WithLifecycle
 
 class SingleEventLiveData<T>(
     private val uiExecutor: UiExecutor
 ) : MutableLiveData<T> {
 
-    @VisibleForTesting
-    var lastEmittedData: T? = null
-
     private var data: T? = null
-    private var observer: ((T) -> Unit) = {}
+    private var observer: ((T) -> Unit)? = null
+    private var unconsumedData: T? = null
 
-    override fun observe(observer: (T) -> Unit) {
+    override fun observe(observer: (T) -> Unit): WithLifecycle {
         this.observer = observer
+        unconsumedData?.let {
+            uiExecutor.execute { observer.invoke(it) }
+            unconsumedData = null
+        }
+        return this
     }
 
     override fun emit(data: T) {
-        lastEmittedData = data
         this.data = data
-        mainHandler.post {
-            observer.invoke(data)
+        val currentObserver = observer
+        if (currentObserver != null) {
+            uiExecutor.execute { currentObserver.invoke(data) }
+        } else {
+            unconsumedData = data
         }
+    }
+
+    override fun removeObserver() {
+        this.observer = null
+    }
+
+    override fun onDestroy() {
+        removeObserver()
     }
 }

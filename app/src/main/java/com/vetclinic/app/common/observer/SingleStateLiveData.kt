@@ -1,7 +1,7 @@
 package com.vetclinic.app.common.observer
 
 import com.vetclinic.app.common.ui.UiExecutor
-import android.os.Looper
+import com.vetclinic.app.common.ui.WithLifecycle
 
 class SingleStateLiveData<T>(
     initial: T,
@@ -9,17 +9,26 @@ class SingleStateLiveData<T>(
 ) : MutableLiveData<T> {
 
     private var data: T = initial
-    private var observer: ((T) -> Unit) = {}
+    private var observer: ((T) -> Unit)? = null
 
     val value get() = data
 
-    override fun observe(observer: (T) -> Unit) {
+    override fun observe(observer: (T) -> Unit): WithLifecycle {
         this.observer = observer
-        mainHandler.post { observer.invoke(data) }
+        uiExecutor.execute { observer.invoke(data) }
+        return this
     }
 
     override fun emit(data: T) {
         this.data = data
-        mainHandler.post { observer.invoke(data) }
+        observer?.let { uiExecutor.execute { it.invoke(data) } }
+    }
+
+    override fun removeObserver() {
+        this.observer = null
+    }
+
+    override fun onDestroy() {
+        removeObserver()
     }
 }

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), PresenterKey {
 
     private var presenterStore: PresenterStore? = null
+    private val bagOfDestroyable = mutableListOf<WithLifecycle>()
 
     protected abstract fun presenterFactory(): P
 
@@ -26,6 +27,13 @@ abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), Presenter
         } else {
             store
         }
+    }
+
+    /**
+     * Should destroy on onDestroy()
+     */
+    fun destroyable(destroyable: WithLifecycle) {
+        bagOfDestroyable.add(destroyable)
     }
 
     @Suppress("DEPRECATION")
@@ -52,6 +60,8 @@ abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), Presenter
 
     override fun onDestroy() {
         super.onDestroy()
+        bagOfDestroyable.forEach(WithLifecycle::onDestroy)
+        bagOfDestroyable.clear()
         if (!isChangingConfigurations) {
             presenterStore?.let { store ->
                 store.get(presenterKey())?.onDestroy()
