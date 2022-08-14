@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.vetclinic.app.R
 import com.vetclinic.app.common.fetchimage.FetchImage
 import com.vetclinic.app.databinding.RecyclerviewPetItemBinding
 import com.vetclinic.app.domain.PetDomain
@@ -37,6 +38,7 @@ class PetListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PetDomain) {
+            binding.petImage.setImageResource(R.drawable.ic_launcher_foreground)
             fetchImage.into(binding.petImage, item.imageUrl)
             binding.petInfo.text = item.title
             binding.root.setOnClickListener { onItemClicked.invoke(item) }
