@@ -11,13 +11,7 @@ import com.vetclinic.app.R
 import com.vetclinic.app.common.extensions.isVisible
 import com.vetclinic.app.databinding.PetListFragmentLayoutBinding
 import com.vetclinic.app.di.di
-import com.vetclinic.app.domain.usecase.FetchConfigUseCase
-import com.vetclinic.app.domain.usecase.FetchPetsUseCase
-import com.vetclinic.app.domain.workinghours.CheckWorkingHours
-import com.vetclinic.app.domain.workinghours.CurrentHour
-import com.vetclinic.app.domain.workinghours.ParseWorkingHours
 import com.vetclinic.app.ui.base.BaseFragment
-import com.vetclinic.app.ui.pet.PetFragment
 
 
 class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresenter>() {
@@ -26,9 +20,9 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
 
     override fun presenterFactory(): PetListPresenter = PetListPresenter(
         di.navigation,
+        di.checkWorkingHours,
         di.fetchConfigUseCase,
         di.fetchPetsUseCase,
-        di.checkWorkingHours
     )
 
     override fun getViewBinding(
@@ -63,21 +57,19 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
         binding.chatBtn.setOnClickListener { petListPresenter.chat() }
         binding.callBtn.setOnClickListener { petListPresenter.call() }
 
-        petListPresenter.configObserver.observe {
+        destroyable(petListPresenter.configObserver.observe {
             binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled
             binding.callBtn.isVisible = it.isCallEnabled
             binding.chatBtn.isVisible = it.isChatEnabled
             binding.workingHours.isVisible = it.workingHours.origin.isNotEmpty()
             binding.workingHours.text = getString(R.string.office_hours, it.workingHours.origin)
-        }
-        petListPresenter.listObserver.observe { petAdapter.submitList(it) }
-        petListPresenter.showAlert.observe { showAlert(it.title, it.message) }
-        petListPresenter.errors.observe {
+        })
+        destroyable(petListPresenter.listObserver.observe { petAdapter.submitList(it) })
+        destroyable(petListPresenter.showAlert.observe { showAlert(it.title, it.message) })
+        destroyable(petListPresenter.errors.observe {
             binding.errorsLayout.isVisible = true
             showToast(getString(R.string.generic_error, it.message))
-        }
-
-        petListPresenter.fetchData()
+        })
     }
 
     companion object {

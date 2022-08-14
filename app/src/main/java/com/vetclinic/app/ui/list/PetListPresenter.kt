@@ -1,6 +1,5 @@
 package com.vetclinic.app.ui.list
 
-import android.util.Log
 import com.vetclinic.app.R
 import com.vetclinic.app.common.observer.SingleEventLiveData
 import com.vetclinic.app.common.observer.SingleStateLiveData
@@ -15,9 +14,9 @@ import com.vetclinic.app.navigation.Screen
 
 class PetListPresenter(
     private val navigation: Navigation.Route,
-    private val fetchConfigUseCase: UseCase<ConfigDomain>,
-    private val fetchPetsUseCase: UseCase<List<PetDomain>>,
-    private val checkWorkingHours: CheckWorkingHours
+    private val checkWorkingHours: CheckWorkingHours,
+    fetchConfigUseCase: UseCase<ConfigDomain>,
+    fetchPetsUseCase: UseCase<List<PetDomain>>,
     uiExecutor: UiExecutor = UiExecutor.Main()
 ) : Presenter {
 
@@ -33,17 +32,7 @@ class PetListPresenter(
     private val _errors = SingleEventLiveData<Throwable>(uiExecutor)
     val errors get() = _errors.asDataObserver()
 
-    private var alreadyFetched = false
-
-    /**
-     * Since our "LiveData" irrespective to fragment lifecycle
-     * we should call [fetchData] every time @ onViewCreated() or smth
-     * and check if it has been fetched already
-     */
-    fun fetchData() {
-        if (alreadyFetched) return
-        alreadyFetched = true
-
+    init {
         fetchConfigUseCase.invoke({
             _configObserver.emit(it)
         }, {
