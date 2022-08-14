@@ -56,6 +56,7 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
 
         binding.chatBtn.setOnClickListener { petListPresenter.chat() }
         binding.callBtn.setOnClickListener { petListPresenter.call() }
+        binding.retry.setOnClickListener { petListPresenter.retry() }
 
         destroyable(petListPresenter.configObserver.observe {
             binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled
@@ -65,11 +66,10 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
             binding.workingHours.text = getString(R.string.office_hours, it.workingHours.origin)
         })
         destroyable(petListPresenter.listObserver.observe { petAdapter.submitList(it) })
+        destroyable(petListPresenter.loadingState.observe { binding.loading.isVisible = it })
+        destroyable(petListPresenter.errorState.observe { binding.errorsLayout.isVisible = it })
         destroyable(petListPresenter.showAlert.observe { showAlert(it.title, it.message) })
-        destroyable(petListPresenter.errors.observe {
-            binding.errorsLayout.isVisible = true
-            showToast(getString(R.string.generic_error, it.message))
-        })
+        destroyable(petListPresenter.errors.observe { showToast(getString(R.string.generic_error, it.message)) })
     }
 
     companion object {

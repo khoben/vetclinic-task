@@ -8,11 +8,12 @@ import com.vetclinic.app.domain.PetDomain
 import com.vetclinic.app.domain.WorkingHoursDomain
 import com.vetclinic.app.domain.workinghours.CheckWorkingHours
 import com.vetclinic.app.domain.workinghours.CurrentHour
-import com.vetclinic.app.testing.getOrAwaitValue
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
+import com.vetclinic.app.testing.getOrAwaitValue
 import org.junit.Assert
 import org.junit.Test
+import java.util.concurrent.TimeoutException
 
 class PetListPresenterTest {
 
@@ -116,6 +117,72 @@ class PetListPresenterTest {
             presenter.configObserver.getOrAwaitValue()
         )
         Assert.assertTrue(presenter.errors.getOrAwaitValue() is java.lang.RuntimeException)
+        Assert.assertTrue(presenter.errorState.getOrAwaitValue())
+    }
+
+    @Test
+    fun `should retry success data loading after failed`() {
+
+        var errorUseCase = true
+
+        val errorConfigUseCase = object : UseCase<ConfigDomain> {
+            override fun invoke(
+                onResult: (ConfigDomain) -> Unit,
+                onError: (Throwable) -> Unit
+            ) {
+                if (errorUseCase) {
+                    onError.invoke(RuntimeException())
+                } else {
+                    onResult.invoke(expectedConfigDomain)
+                }
+            }
+        }
+        val errorPetListUseCase = object : UseCase<List<PetDomain>> {
+            override fun invoke(
+                onResult: (List<PetDomain>) -> Unit,
+                onError: (Throwable) -> Unit
+            ) {
+                if (errorUseCase) {
+                    onError.invoke(RuntimeException())
+                } else {
+                    onResult.invoke(expectedPetDomain)
+                }
+            }
+        }
+
+        val presenter = PetListPresenter(
+            navigation,
+            checkWorkingHours,
+            errorConfigUseCase,
+            errorPetListUseCase
+        )
+
+        Assert.assertEquals(
+            emptyList<PetDomain>(),
+            presenter.listObserver.getOrAwaitValue()
+        )
+        Assert.assertEquals(
+            ConfigDomain.EMPTY,
+            presenter.configObserver.getOrAwaitValue()
+        )
+        Assert.assertTrue(presenter.errors.getOrAwaitValue() is java.lang.RuntimeException)
+        Assert.assertTrue(presenter.errorState.getOrAwaitValue())
+
+        errorUseCase = false
+        presenter.retry()
+
+        Assert.assertEquals(
+            expectedPetDomain,
+            presenter.listObserver.getOrAwaitValue()
+        )
+        Assert.assertEquals(
+            expectedConfigDomain,
+            presenter.configObserver.getOrAwaitValue()
+        )
+        Assert.assertThrows(TimeoutException::class.java) {
+            presenter.errors.getOrAwaitValue()
+        }
+        Assert.assertFalse(presenter.errorState.getOrAwaitValue())
     }
 
     @Test

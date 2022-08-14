@@ -11,12 +11,14 @@ import com.vetclinic.app.domain.PetDomain
 import com.vetclinic.app.domain.workinghours.CheckWorkingHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 class PetListPresenter(
     private val navigation: Navigation.Route,
     private val checkWorkingHours: CheckWorkingHours,
-    fetchConfigUseCase: UseCase<ConfigDomain>,
-    fetchPetsUseCase: UseCase<List<PetDomain>>,
+    private val fetchConfigUseCase: UseCase<ConfigDomain>,
+    private val fetchPetsUseCase: UseCase<List<PetDomain>>,
     uiExecutor: UiExecutor = UiExecutor.Main()
 ) : Presenter {
 
@@ -29,21 +31,59 @@ class PetListPresenter(
     private val _showAlert = SingleEventLiveData<PetListAlert>(uiExecutor)
     val showAlert get() = _showAlert.asDataObserver()
 
+    private val _loadingState = SingleStateLiveData(false, uiExecutor)
+    val loadingState get() = _loadingState.asDataObserver()
+
+    private val _errorState = SingleStateLiveData(false, uiExecutor)
+    val errorState get() = _errorState.asDataObserver()
+
     private val _errors = SingleEventLiveData<Throwable>(uiExecutor)
     val errors get() = _errors.asDataObserver()
 
+    private val loadedSources = AtomicInteger(0)
+    private val isAnySourceFailed = AtomicBoolean(false)
+
     init {
+        fetch()
+    }
+
+    private fun signalLoaded() {
+        if (loadedSources.incrementAndGet() >= TARGET_LOADED_SOURCES) {
+            _loadingState.emit(false)
+            loadedSources.set(0)
+        }
+    }
+
+    private fun signalError() {
+        if (isAnySourceFailed.compareAndSet(false, true)) {
+            _errorState.emit(true)
+            _loadingState.emit(false)
+        }
+    }
+
+    private fun fetch() {
+        _loadingState.emit(true)
         fetchConfigUseCase.invoke({
             _configObserver.emit(it)
+            signalLoaded()
         }, {
             _errors.emit(it)
+            signalError()
         })
 
         fetchPetsUseCase.invoke({
             _listObserver.emit(it)
+            signalLoaded()
         }, {
             _errors.emit(it)
+            signalError()
         })
+    }
+
+    fun retry() {
+        isAnySourceFailed.set(false)
+        _errorState.emit(false)
+        fetch()
     }
 
     fun routeToPet(petUri: String, petTitle: String) {
@@ -69,5 +109,9 @@ class PetListPresenter(
                     R.string.alert_not_working_hours
             )
         )
+    }
+
+    companion object {
+        private const val TARGET_LOADED_SOURCES = 2
     }
 }

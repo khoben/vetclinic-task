@@ -101,6 +101,36 @@ class MainActivityTest : AppFlowTest() {
     }
 
     @Test
+    fun shouldReloadDataOnRetry() {
+        updateDiConfig {
+            copy(
+                isPetListError = true,
+                isConfigError = true
+            )
+        }
+
+        waitForResourcesLoaded(2)
+
+        launchActivity<MainActivity>().use {
+            onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(isDisplayed()))
+
+            updateDiConfig {
+                copy(
+                    isPetListError = false,
+                    isConfigError = false
+                )
+            }
+
+            onView(withId(com.vetclinic.app.R.id.retry)).perform(click())
+
+            onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(not(isDisplayed())))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(isDisplayed()))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(withSubstring("M-F 9:00 - 18:00")))
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(1))
+        }
+    }
+
+    @Test
     fun shouldOpenPetFragmentOnClickListItem() {
 
         val expectedPetName = "Pet Name"

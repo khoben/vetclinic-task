@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pet_list_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pet_list_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -71,15 +71,44 @@
 
     </LinearLayout>
 
-
-    <TextView
+    <LinearLayout
         android:id="@+id/errors_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="@string/error_ntry_restart_app"
-        android:textAppearance="@style/App.TextAppearance.Error"
-        android:textColor="@color/red"
-        android:visibility="gone" />
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/error_fetching"
+            android:textAppearance="@style/App.TextAppearance.Error"
+            android:textColor="@color/red" />
+
+        <Button
+            android:id="@+id/retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_padding"
+            android:gravity="center"
+            android:text="@string/retry"
+            android:textAppearance="@style/App.TextAppearance.Error" />
+
+    </LinearLayout>
+
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"
+        tools:indeterminate="false"
+        tools:progress="86"
+        tools:visibility="visible" />
+
 
 </FrameLayout>

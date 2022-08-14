@@ -9,5 +9,6 @@
     <string name="alert_not_working_hours">Work hours has ended. Please contact us again on the next work day</string>
     <string name="pet_image">Pet image</string>
     <string name="generic_error">Error: %1$s</string>
-    <string name="error_ntry_restart_app">Error\nTry restart app</string>
+    <string name="error_fetching">Error while data fetching</string>
+    <string name="retry">Retry</string>
 </resources>
