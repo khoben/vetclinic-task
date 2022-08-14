@@ -15,9 +15,11 @@ class MainActivity : PresenterActivity<MainPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        presenter.navigationObserver.observe { screen ->
-            screen.show(R.id.container, supportFragmentManager)
-        }
+        destroyable(
+            presenter.navigationObserver.observe { screen ->
+                screen.show(R.id.container, supportFragmentManager)
+            }
+        )
     }
 
     override fun onSupportNavigateUp(): Boolean {
