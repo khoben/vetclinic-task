@@ -31,7 +31,7 @@ import java.util.concurrent.Executors
 class AppContainer(appContext: Context) : DiContainer {
 
     private val executorService: ExecutorService by lazy {
-        Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
+        Executors.newFixedThreadPool(EXECUTOR_THREADS)
     }
 
     private fun provideOkHttpClient(): OkHttpClient =
@@ -99,5 +99,6 @@ class AppContainer(appContext: Context) : DiContainer {
     companion object {
         private const val CONFIG_URL = "https://jsonkeeper.com/b/PN84"
         private const val PETS_URL = "https://jsonkeeper.com/b/7GTA"
+        private const val EXECUTOR_THREADS = 5
     }
 }
