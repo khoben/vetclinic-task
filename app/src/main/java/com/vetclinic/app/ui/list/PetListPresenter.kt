@@ -42,21 +42,15 @@ class PetListPresenter(
         if (alreadyFetched) return
         alreadyFetched = true
 
-        Log.d("TEST_PRESENTER", "fetchData called")
-
         fetchConfigUseCase.invoke({
-            Log.d("TEST_PRESENTER", "fetchedData: $it")
             _configObserver.emit(it)
         }, {
-            Log.e("TEST_PRESENTER", "Error: $it")
             _errors.emit(it)
         })
 
         fetchPetsUseCase.invoke({
-            Log.d("TEST_PRESENTER", "fetchedData: $it")
             _listObserver.emit(it)
         }, {
-            Log.e("TEST_PRESENTER", "Error: $it")
             _errors.emit(it)
         })
     }

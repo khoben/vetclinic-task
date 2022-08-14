@@ -30,12 +30,10 @@ class SimpleCountingIdlingResource(resourceName: String?) : IdlingResource {
     }
 
     fun increment() {
-        Log.d("IdlingResource", "increment called")
         counter.getAndIncrement()
     }
 
     fun decrement() {
-        Log.d("IdlingResource", "decrement called")
         val counterVal: Int = counter.decrementAndGet()
         if (counterVal == 0) {
             // we've gone from non-zero to zero. That means we're idle now! Tell espresso.
