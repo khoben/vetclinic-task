@@ -5,6 +5,7 @@ import com.vetclinic.app.R
 import com.vetclinic.app.common.observer.SingleEventLiveData
 import com.vetclinic.app.common.observer.SingleStateLiveData
 import com.vetclinic.app.common.ui.Presenter
+import com.vetclinic.app.common.ui.UiExecutor
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
@@ -17,18 +18,19 @@ class PetListPresenter(
     private val fetchConfigUseCase: UseCase<ConfigDomain>,
     private val fetchPetsUseCase: UseCase<List<PetDomain>>,
     private val checkWorkingHours: CheckWorkingHours
+    uiExecutor: UiExecutor = UiExecutor.Main()
 ) : Presenter {
 
-    private val _configObserver = SingleStateLiveData(ConfigDomain.EMPTY)
+    private val _configObserver = SingleStateLiveData(ConfigDomain.EMPTY, uiExecutor)
     val configObserver get() = _configObserver.asDataObserver()
 
-    private val _listObserver = SingleStateLiveData(emptyList<PetDomain>())
+    private val _listObserver = SingleStateLiveData(emptyList<PetDomain>(), uiExecutor)
     val listObserver get() = _listObserver.asDataObserver()
 
-    private val _showAlert = SingleEventLiveData<PetListAlert>()
+    private val _showAlert = SingleEventLiveData<PetListAlert>(uiExecutor)
     val showAlert get() = _showAlert.asDataObserver()
 
-    private val _errors = SingleEventLiveData<Throwable>()
+    private val _errors = SingleEventLiveData<Throwable>(uiExecutor)
     val errors get() = _errors.asDataObserver()
 
     private var alreadyFetched = false

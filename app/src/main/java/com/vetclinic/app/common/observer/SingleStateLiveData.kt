@@ -1,11 +1,11 @@
 package com.vetclinic.app.common.observer
 
-import android.os.Handler
+import com.vetclinic.app.common.ui.UiExecutor
 import android.os.Looper
 
 class SingleStateLiveData<T>(
     initial: T,
-    private val mainHandler: Handler = Handler(Looper.getMainLooper())
+    private val uiExecutor: UiExecutor
 ) : MutableLiveData<T> {
 
     private var data: T = initial

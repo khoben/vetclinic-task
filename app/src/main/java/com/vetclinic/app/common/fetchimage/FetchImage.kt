@@ -1,13 +1,12 @@
 package com.vetclinic.app.common.fetchimage
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.annotation.MainThread
 import com.vetclinic.app.common.fetchimage.strategy.ImageLoadStrategy
 import com.vetclinic.app.common.fetchimage.target.GetTargetSize
+import com.vetclinic.app.common.ui.UiExecutor
 import timber.log.Timber
 
 
@@ -28,7 +27,7 @@ interface FetchImage {
         @DrawableRes private val placeholder: Int,
         private val loadStrategy: ImageLoadStrategy,
         private val getTargetSize: GetTargetSize<View>,
-        private val mainHandler: Handler = Handler(Looper.getMainLooper())
+        private val uiExecutor: UiExecutor = UiExecutor.Main()
     ) : FetchImage {
 
         @MainThread
@@ -37,9 +36,9 @@ interface FetchImage {
                 getTargetSize.onSizeReady(view) { targetSize ->
                     loadStrategy.proceed(url, targetSize, { image ->
                         if (image != null) {
-                            mainHandler.post { view.setImageBitmap(image) }
+                            uiExecutor.execute { view.setImageBitmap(image) }
                         } else {
-                            mainHandler.post { view.setImageResource(placeholder) }
+                            uiExecutor.execute { view.setImageResource(placeholder) }
                         }
                     })
                 }

@@ -1,11 +1,10 @@
 package com.vetclinic.app.common.observer
 
-import android.os.Handler
+import com.vetclinic.app.common.ui.UiExecutor
 import android.os.Looper
-import androidx.annotation.VisibleForTesting
 
 class SingleEventLiveData<T>(
-    private val mainHandler: Handler = Handler(Looper.getMainLooper())
+    private val uiExecutor: UiExecutor
 ) : MutableLiveData<T> {
 
     @VisibleForTesting

@@ -2,6 +2,7 @@ package com.vetclinic.app.navigation
 
 import com.vetclinic.app.common.observer.DataObserver
 import com.vetclinic.app.common.observer.SingleEventLiveData
+import com.vetclinic.app.common.ui.UiExecutor
 
 interface Navigation {
 
@@ -15,15 +16,15 @@ interface Navigation {
 
     interface Component : Route, Observe
 
-    class Base : Component {
+    class Base(uiExecutor: UiExecutor = UiExecutor.Main()) : Component {
 
-        private val navigationLiveData = SingleEventLiveData<Screen>()
+        private val liveData: SingleEventLiveData<Screen> = SingleEventLiveData(uiExecutor)
 
         override fun to(screen: Screen) {
-            navigationLiveData.emit(screen)
+            liveData.emit(screen)
         }
 
         override fun observe(): DataObserver<Screen> =
-            navigationLiveData.asDataObserver()
+            liveData.asDataObserver()
     }
 }
