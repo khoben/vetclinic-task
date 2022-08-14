@@ -5,11 +5,15 @@
 
 - https://jsonkeeper.com/b/7GTA - pets
 
-#### Screenshots:
+#### [Get Sample APK](./apk/vetclinic-debug.apk)
+
 <p>
-  <div style='float: center'>
-      <img style='height: 460px' src="./README.md-images/result.jpg"/>
-  </div>
+<details>
+  <summary><b>Screenshots<b></summary>
+    <pre>
+      <img src="./README.md-images/1.jpg" height="300" width="150" /> <img src="./README.md-images/2.png" height="300" width="150" /> <img src="./README.md-images/3.png" height="300" width="150" /> <img src="./README.md-images/4.png" height="300" width="150" />
+  </pre>
+</details>
 </p>
 
 ### Implement this app with the following requirements:
