@@ -32,8 +32,15 @@ abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), Presenter
     /**
      * Should destroy on onDestroy()
      */
-    fun destroyable(destroyable: WithLifecycle) {
+    fun withLifecycle(destroyable: WithLifecycle) {
         bagOfDestroyable.add(destroyable)
+    }
+
+    /**
+     * Should destroy on onDestroyView()
+     */
+    fun withLifecycle(block : WithLifecycleCollector.() -> Unit) {
+        bagOfDestroyable.addAll(WithLifecycleCollector().apply(block).build())
     }
 
     @Suppress("DEPRECATION")
@@ -59,9 +66,10 @@ abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), Presenter
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         bagOfDestroyable.forEach(WithLifecycle::onDestroy)
         bagOfDestroyable.clear()
+
+        super.onDestroy()
         if (!isChangingConfigurations) {
             presenterStore?.let { store ->
                 store.get(presenterKey())?.onDestroy()

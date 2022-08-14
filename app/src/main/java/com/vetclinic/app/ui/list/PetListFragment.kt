@@ -58,18 +58,22 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
         binding.callBtn.setOnClickListener { petListPresenter.call() }
         binding.retryBtn.setOnClickListener { petListPresenter.retry() }
 
-        destroyable(petListPresenter.configObserver.observe {
-            binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled
-            binding.callBtn.isVisible = it.isCallEnabled
-            binding.chatBtn.isVisible = it.isChatEnabled
-            binding.workingHours.isVisible = it.workingHours.origin.isNotEmpty()
-            binding.workingHours.text = getString(R.string.office_hours, it.workingHours.origin)
-        })
-        destroyable(petListPresenter.listObserver.observe { petAdapter.submitList(it) })
-        destroyable(petListPresenter.loadingState.observe { binding.loading.isVisible = it })
-        destroyable(petListPresenter.errorState.observe { binding.errorsLayout.isVisible = it })
-        destroyable(petListPresenter.showAlert.observe { showAlert(it.title, it.message) })
-        destroyable(petListPresenter.errors.observe { showToast(getString(R.string.generic_error, it.message)) })
+        withLifecycle {
+            +petListPresenter.configObserver.observe {
+                binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled
+                binding.callBtn.isVisible = it.isCallEnabled
+                binding.chatBtn.isVisible = it.isChatEnabled
+                binding.workingHours.isVisible = it.workingHours.origin.isNotEmpty()
+                binding.workingHours.text = getString(R.string.office_hours, it.workingHours.origin)
+            }
+            +petListPresenter.listObserver.observe { petAdapter.submitList(it) }
+            +petListPresenter.loadingState.observe { binding.loading.isVisible = it }
+            +petListPresenter.errorState.observe { binding.errorsLayout.isVisible = it }
+            +petListPresenter.showAlert.observe { showAlert(it.title, it.message) }
+            +petListPresenter.errors.observe {
+                showToast(getString(R.string.generic_error, it.message))
+            }
+        }
     }
 
     companion object {

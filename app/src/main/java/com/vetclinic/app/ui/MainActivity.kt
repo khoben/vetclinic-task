@@ -15,7 +15,7 @@ class MainActivity : PresenterActivity<MainPresenter>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        destroyable(
+        withLifecycle(
             presenter.navigationObserver.observe { screen ->
                 screen.show(R.id.container, supportFragmentManager)
             }
