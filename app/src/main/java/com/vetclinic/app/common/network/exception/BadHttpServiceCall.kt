@@ -2,4 +2,4 @@ package com.vetclinic.app.common.network.exception
 
 import java.io.IOException
 
-class BadHttpServiceCall : IOException("Bad HTTP service call")
+class BadHttpServiceCall(val code: Int, val text: String) : IOException("Bad HTTP service call")

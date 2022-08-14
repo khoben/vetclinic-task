@@ -20,7 +20,7 @@ abstract class MakeRequest(private val client: OkHttpClient) {
                 if (response.isSuccessful) {
                     onResult.invoke(response)
                 } else {
-                    onError.invoke(BadHttpServiceCall())
+                    onError.invoke(BadHttpServiceCall(response.code, response.message))
                 }
             }
         })
