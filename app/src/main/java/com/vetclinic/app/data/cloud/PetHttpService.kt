@@ -7,7 +7,7 @@ import okhttp3.OkHttpClient
 
 class PetHttpService(
     private val url: String,
-    private val marshallPetListResponse: UnmarshallResponse<List<PetCloud>>,
+    private val unmarshallResponse: UnmarshallResponse<List<PetCloud>>,
     client: OkHttpClient
 ) : HttpService<List<PetCloud>>(client) {
 
