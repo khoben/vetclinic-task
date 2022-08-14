@@ -39,7 +39,7 @@ abstract class PresenterActivity<P : Presenter> : AppCompatActivity(), Presenter
     /**
      * Should destroy on onDestroyView()
      */
-    fun withLifecycle(block : WithLifecycleCollector.() -> Unit) {
+    fun withLifecycle(block: WithLifecycleCollector.() -> Unit) {
         bagOfDestroyable.addAll(WithLifecycleCollector().apply(block).build())
     }
 

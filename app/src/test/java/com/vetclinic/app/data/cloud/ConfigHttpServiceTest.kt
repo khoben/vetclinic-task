@@ -5,7 +5,8 @@ import com.vetclinic.app.testing.mockOkHttpClient
 import org.json.JSONException
 import org.junit.Assert
 import org.junit.Test
-import java.util.concurrent.*
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 
 class ConfigHttpServiceTest {

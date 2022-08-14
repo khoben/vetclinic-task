@@ -2,7 +2,6 @@ package com.vetclinic.app.testing
 
 import com.vetclinic.app.common.observer.DataObserver
 import java.util.concurrent.CountDownLatch
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 

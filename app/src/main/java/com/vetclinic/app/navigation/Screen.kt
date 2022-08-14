@@ -18,5 +18,5 @@ sealed class Screen(
         mode = Mode.Replace
     )
 
-    object Test : Screen("Test", {Fragment()}, Mode.Root)
+    object Test : Screen("Test", { Fragment() }, Mode.Root)
 }

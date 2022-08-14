@@ -2,7 +2,6 @@ package com.vetclinic.app.common.ui
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import timber.log.Timber
 
 abstract class PresenterFragment<P : Presenter> : Fragment(), PresenterKey {
 
@@ -30,7 +29,7 @@ abstract class PresenterFragment<P : Presenter> : Fragment(), PresenterKey {
     /**
      * Should destroy on onDestroyView()
      */
-    fun withLifecycle(block : WithLifecycleCollector.() -> Unit) {
+    fun withLifecycle(block: WithLifecycleCollector.() -> Unit) {
         bagOfDestroyable.addAll(WithLifecycleCollector().apply(block).build())
     }
 

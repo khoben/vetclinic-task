@@ -9,10 +9,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
-import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.HourDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.WorkingHoursDomain
 import com.vetclinic.app.testing.AppFlowTest
 import com.vetclinic.app.testing.viewassertions.RecyclerViewItemCountAssertion
 import com.vetclinic.app.ui.list.PetListFragment
@@ -296,9 +293,11 @@ class MainActivityTest : AppFlowTest() {
     fun shouldCallButtonNotDisplayed() {
 
         updateDiConfig {
-            copy(mockedConfig = mockedConfig.copy(
-                isCallEnabled = false
-            ))
+            copy(
+                mockedConfig = mockedConfig.copy(
+                    isCallEnabled = false
+                )
+            )
         }
 
         waitForResourcesLoaded(2)
@@ -313,9 +312,11 @@ class MainActivityTest : AppFlowTest() {
     fun shouldChatButtonNotDisplayed() {
 
         updateDiConfig {
-            copy(mockedConfig = mockedConfig.copy(
-                isChatEnabled = false
-            ))
+            copy(
+                mockedConfig = mockedConfig.copy(
+                    isChatEnabled = false
+                )
+            )
         }
 
         waitForResourcesLoaded(2)
@@ -330,10 +331,12 @@ class MainActivityTest : AppFlowTest() {
     fun shouldChatAndCallButtonNotDisplayed() {
 
         updateDiConfig {
-            copy(mockedConfig = mockedConfig.copy(
-                isChatEnabled = false,
-                isCallEnabled = false
-            ))
+            copy(
+                mockedConfig = mockedConfig.copy(
+                    isChatEnabled = false,
+                    isCallEnabled = false
+                )
+            )
         }
 
         waitForResourcesLoaded(2)

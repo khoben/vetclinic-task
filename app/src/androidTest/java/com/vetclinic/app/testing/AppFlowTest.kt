@@ -3,10 +3,6 @@ package com.vetclinic.app.testing
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.filters.LargeTest
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.HourDomain
-import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.WorkingHoursDomain
 import com.vetclinic.app.testing.idling.EspressoIdlingResource
 import com.vetclinic.app.testing.mock.DiContainerConfig
 import com.vetclinic.app.testing.mock.MockDiContainer

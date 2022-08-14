@@ -6,7 +6,7 @@ import com.vetclinic.app.common.fetchimage.cache.ImageCache
 import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import com.vetclinic.app.common.fetchimage.exception.UnsuccessfulImageRequest
 import com.vetclinic.app.common.network.MakeRequest
-import okhttp3.*
+import okhttp3.OkHttpClient
 import timber.log.Timber
 import java.io.InputStream
 import java.util.concurrent.ExecutorService

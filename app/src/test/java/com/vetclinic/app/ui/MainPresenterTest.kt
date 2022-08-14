@@ -1,9 +1,9 @@
 package com.vetclinic.app.ui
 
 import com.vetclinic.app.common.ui.UiExecutor
-import com.vetclinic.app.testing.getOrAwaitValue
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
+import com.vetclinic.app.testing.getOrAwaitValue
 import org.junit.Assert
 import org.junit.Test
 

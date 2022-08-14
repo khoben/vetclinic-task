@@ -17,10 +17,10 @@ fun mockJsonResponse(jsonString: String) = Response.Builder()
     .build()
 
 fun mockOkHttpClient(uri: String, body: String) = OkHttpClient().newBuilder().addInterceptor(
-        MockInterceptor().apply {
-            rule(get, url eq uri) { respond(body) }
-        }
-    ).build()
+    MockInterceptor().apply {
+        rule(get, url eq uri) { respond(body) }
+    }
+).build()
 
 fun mockOkHttpClient(uri: String, code: Int) = OkHttpClient().newBuilder().addInterceptor(
     MockInterceptor().apply {

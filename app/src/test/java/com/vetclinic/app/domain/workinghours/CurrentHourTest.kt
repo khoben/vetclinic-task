@@ -3,7 +3,6 @@ package com.vetclinic.app.domain.workinghours
 import com.vetclinic.app.domain.HourDomain
 import org.junit.Assert
 import org.junit.Test
-import java.lang.IllegalArgumentException
 import java.util.*
 
 class CurrentHourTest {
