@@ -16,7 +16,11 @@ class PetHttpService(
         onError: (Throwable) -> Unit
     ) {
         makeRequest(url, { response ->
-            onResult.invoke(marshallPetListResponse.unmarshall(response))
+            try {
+                onResult.invoke(unmarshallResponse.unmarshall(response))
+            } catch (e: Exception) {
+                onError.invoke(e)
+            }
         }, onError)
     }
 }

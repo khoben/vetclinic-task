@@ -16,7 +16,11 @@ class ConfigHttpService(
         onError: (Throwable) -> Unit
     ) {
         makeRequest(url, { response ->
-            onResult.invoke(unmarshallResponse.unmarshall(response))
+            try {
+                onResult.invoke(unmarshallResponse.unmarshall(response))
+            } catch (e: Exception) {
+                onError.invoke(e)
+            }
         }, onError)
     }
 }
