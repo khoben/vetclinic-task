@@ -56,7 +56,7 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
 
         binding.chatBtn.setOnClickListener { petListPresenter.chat() }
         binding.callBtn.setOnClickListener { petListPresenter.call() }
-        binding.retry.setOnClickListener { petListPresenter.retry() }
+        binding.retryBtn.setOnClickListener { petListPresenter.retry() }
 
         destroyable(petListPresenter.configObserver.observe {
             binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled

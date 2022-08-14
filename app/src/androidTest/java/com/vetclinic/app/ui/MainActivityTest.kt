@@ -121,7 +121,7 @@ class MainActivityTest : AppFlowTest() {
                 )
             }
 
-            onView(withId(com.vetclinic.app.R.id.retry)).perform(click())
+            onView(withId(com.vetclinic.app.R.id.retryBtn)).perform(click())
 
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(not(isDisplayed())))
             onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(isDisplayed()))
