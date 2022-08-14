@@ -1,4 +1,4 @@
-package com.vetclinic.app.ui.idling
+package com.vetclinic.app.testing.idling
 
 import androidx.test.espresso.IdlingResource
 

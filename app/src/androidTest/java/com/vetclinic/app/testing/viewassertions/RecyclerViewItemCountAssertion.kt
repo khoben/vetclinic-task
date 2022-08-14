@@ -1,4 +1,4 @@
-package com.vetclinic.app.ui
+package com.vetclinic.app.testing.viewassertions
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

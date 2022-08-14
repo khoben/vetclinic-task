@@ -1,6 +1,5 @@
-package com.vetclinic.app.ui.idling
+package com.vetclinic.app.testing.idling
 
-import android.util.Log
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.IdlingResource.ResourceCallback
 import java.util.concurrent.atomic.AtomicInteger
