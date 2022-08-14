@@ -3,6 +3,12 @@ package com.vetclinic.app.di
 import android.content.Context
 import com.vetclinic.app.R
 import com.vetclinic.app.common.fetchimage.*
+import com.vetclinic.app.common.fetchimage.cache.ImageCache
+import com.vetclinic.app.common.fetchimage.cache.KeyHash
+import com.vetclinic.app.common.fetchimage.decode.ComputeScale
+import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
+import com.vetclinic.app.common.fetchimage.decode.TempFile
+import com.vetclinic.app.common.fetchimage.target.GetTargetSize
 import com.vetclinic.app.common.network.HttpService
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.data.cloud.*
@@ -59,6 +65,7 @@ class AppContainer(appContext: Context) : DiContainer {
     override val fetchPetsUseCase: UseCase<List<PetDomain>> by lazy {
         FetchPetsUseCase(petHttpService, PetListMapper())
     }
+
     override val checkWorkingHours: CheckWorkingHours by lazy {
         CheckWorkingHours.Base(CurrentHour.Base())
     }
@@ -67,13 +74,17 @@ class AppContainer(appContext: Context) : DiContainer {
         FetchImage.Base(
             placeholder = R.drawable.ic_launcher_foreground,
             okHttpClient = provideOkHttpClient(),
+            getTargetSize = GetTargetSize.ViewTarget(),
             memoryCache = ImageCache.MemoryImageCache(),
             persistenceCache = ImageCache.FileImageCache(
-                appContext,
-                KeyHash.MD5(),
-                ImageDecoder.FileDecoder()
+                context = appContext,
+                keyHash = KeyHash.MD5(),
+                imageDecoder = ImageDecoder.FileDecoder()
             ),
-            downSampleImage = DownSampleStreamImage.Base(CreateTempFile.Cache(appContext)),
+            streamImageDecoder = ImageDecoder.StreamDecoder(
+                tempFile = TempFile.Cache(appContext),
+                computeScale = ComputeScale.Factor2()
+            ),
             executorService = executorService
         )
     }

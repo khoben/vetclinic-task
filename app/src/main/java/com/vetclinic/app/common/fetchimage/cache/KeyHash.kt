@@ -1,4 +1,4 @@
-package com.vetclinic.app.common.fetchimage
+package com.vetclinic.app.common.fetchimage.cache
 
 import java.math.BigInteger
 import java.security.MessageDigest

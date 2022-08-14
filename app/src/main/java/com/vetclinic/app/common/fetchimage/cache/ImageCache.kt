@@ -1,8 +1,9 @@
-package com.vetclinic.app.common.fetchimage
+package com.vetclinic.app.common.fetchimage.cache
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.LruCache
+import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
