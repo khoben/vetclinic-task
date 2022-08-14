@@ -17,4 +17,6 @@ sealed class Screen(
         factory = { PetFragment.create(petUri, petTitle) },
         mode = Mode.Replace
     )
+
+    object Test : Screen("Test", {Fragment()}, Mode.Root)
 }
