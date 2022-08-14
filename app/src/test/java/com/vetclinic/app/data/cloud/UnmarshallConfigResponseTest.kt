@@ -1,18 +1,22 @@
 package com.vetclinic.app.data.cloud
 
-import com.vetclinic.app.Utils.genResponse
+import com.vetclinic.app.testing.mockJsonResponse
 import org.json.JSONException
 import org.junit.Assert
 import org.junit.Test
 
 class UnmarshallConfigResponseTest {
     private val unmarshallConfigResponse = UnmarshallConfigResponse()
-    private val expected = ConfigCloud(true, true, "M-F 9:00 - 18:00")
 
     @Test
-    fun testUnMarshall() {
+    fun testSuccessResponseUnmarshall() {
+        val expected = ConfigCloud(
+            isChatEnabled = true,
+            isCallEnabled = true,
+            workHours = "M-F 9:00 - 18:00"
+        )
         val actual = unmarshallConfigResponse.unmarshall(
-            genResponse(
+            mockJsonResponse(
                 "{\n" +
                         "\t\"settings\": {\n" +
                         "\t\t\"isChatEnabled\": true,\n" +
@@ -26,9 +30,9 @@ class UnmarshallConfigResponseTest {
     }
 
     @Test(expected = JSONException::class)
-    fun testErrorUnMarshall() {
+    fun testFailResponseUnmarshall() {
         unmarshallConfigResponse.unmarshall(
-            genResponse(
+            mockJsonResponse(
                 "{\n" +
                         "\t\"settings\": {\n" +
                         "\t\t\"isChatEnabled\": true,\n" +
@@ -36,6 +40,13 @@ class UnmarshallConfigResponseTest {
                         "\t}\n" +
                         "}"
             )
+        )
+    }
+
+    @Test(expected = JSONException::class)
+    fun testEmptyResponseUnmarshall() {
+        unmarshallConfigResponse.unmarshall(
+            mockJsonResponse("")
         )
     }
 }

@@ -29,12 +29,12 @@ class CheckWorkingHoursTest {
     private val checkWorkingHoursNotWorking = CheckWorkingHours.Base(currentHourNotWorking)
 
     @Test
-    fun testWorking() {
+    fun testWorkingHours() {
         Assert.assertTrue(checkWorkingHoursWorking.check(workingHours))
     }
 
     @Test
-    fun testNotWorking() {
+    fun testNotWorkingHours() {
         Assert.assertFalse(checkWorkingHoursNotWorking.check(workingHours))
     }
 }

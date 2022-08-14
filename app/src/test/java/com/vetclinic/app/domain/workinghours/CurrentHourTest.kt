@@ -60,7 +60,6 @@ class CurrentHourTest {
             }
         }
 
-
         val currentHour = CurrentHour.Base(calendar)
         currentHour.get()
     }
