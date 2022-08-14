@@ -12,7 +12,7 @@ sealed class Screen(
     fun show(containerId: Int, fragmentManager: FragmentManager) =
         mode.show(id, factory, containerId, fragmentManager)
 
-    class Pet(petUri: String, petTitle: String) : Screen(
+    data class Pet(val petUri: String, val petTitle: String) : Screen(
         id = PetFragment.TAG,
         factory = { PetFragment.create(petUri, petTitle) },
         mode = Mode.Replace
