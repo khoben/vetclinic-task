@@ -20,7 +20,7 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
 
     override fun presenterFactory(): PetListPresenter = PetListPresenter(
         di.navigation,
-        di.checkWorkingHours,
+        di.checkWorkHours,
         di.fetchConfigUseCase,
         di.fetchPetsUseCase,
     )

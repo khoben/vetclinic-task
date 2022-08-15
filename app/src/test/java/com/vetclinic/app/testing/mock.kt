@@ -7,6 +7,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.mock.*
+import java.util.*
 
 fun mockJsonResponse(jsonString: String) = Response.Builder()
     .request(Request.Builder().url("https://mocked.com").build())
@@ -27,3 +28,24 @@ fun mockOkHttpClient(uri: String, code: Int) = OkHttpClient().newBuilder().addIn
         rule(get, url eq uri) { respond(code) }
     }
 ).build()
+
+fun mockCalendar(dayOfWeek: Int, hourOfDay: Int, minute: Int, locale: Locale = Locale.US) =
+    object : Calendar(TimeZone.getDefault(), locale) {
+        override fun computeTime() = Unit
+        override fun computeFields() = Unit
+        override fun add(field: Int, amount: Int) = Unit
+        override fun roll(field: Int, up: Boolean) = Unit
+        override fun getMinimum(field: Int): Int = 0
+        override fun getMaximum(field: Int): Int = 0
+        override fun getGreatestMinimum(field: Int): Int = 0
+        override fun getLeastMaximum(field: Int): Int = 0
+
+        override fun get(field: Int): Int {
+            return when (field) {
+                DAY_OF_WEEK -> dayOfWeek
+                HOUR_OF_DAY -> hourOfDay
+                MINUTE -> minute
+                else -> 0
+            }
+        }
+    }

@@ -6,8 +6,8 @@ import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.di.DiContainer
 import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.WorkingHoursDomain
-import com.vetclinic.app.domain.workinghours.CheckWorkingHours
+import com.vetclinic.app.domain.date.WorkHoursDomain
+import com.vetclinic.app.domain.workinghours.CheckWorkHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.testing.idling.EspressoIdlingResource
 
@@ -39,8 +39,8 @@ object MockDiContainer : DiContainer {
         }
     }
 
-    override val checkWorkingHours: CheckWorkingHours = object : CheckWorkingHours {
-        override fun check(workingHours: WorkingHoursDomain): Boolean {
+    override val checkWorkHours: CheckWorkHours = object : CheckWorkHours {
+        override fun check(workHours: WorkHoursDomain): Boolean {
             return config.isWorkingHours
         }
     }

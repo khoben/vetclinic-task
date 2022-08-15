@@ -3,11 +3,10 @@ package com.vetclinic.app.ui.list
 import com.vetclinic.app.common.ui.UiExecutor
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.HourDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.WorkingHoursDomain
-import com.vetclinic.app.domain.workinghours.CheckWorkingHours
-import com.vetclinic.app.domain.workinghours.CurrentHour
+import com.vetclinic.app.domain.date.*
+import com.vetclinic.app.domain.workinghours.CheckWorkHours
+import com.vetclinic.app.domain.workinghours.CurrentDate
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
 import com.vetclinic.app.testing.getOrAwaitValue
@@ -18,14 +17,14 @@ import java.util.concurrent.TimeoutException
 class PetListPresenterTest {
 
     private val navigation = Navigation.Base(UiExecutor.Test())
-    private val checkWorkingHours = CheckWorkingHours.Base(object : CurrentHour {
-        override fun get(): HourDomain {
-            return HourDomain(2, 15, 0)
+    private val checkWorkHours = CheckWorkHours.Base(object : CurrentDate {
+        override fun get(): DateDomain {
+            return DateDomain(2, TimeDomain(15, 0))
         }
     })
-    private val checkNotWorkingHours = CheckWorkingHours.Base(object : CurrentHour {
-        override fun get(): HourDomain {
-            return HourDomain(1, 15, 0)
+    private val checkNotWorkingHours = CheckWorkHours.Base(object : CurrentDate {
+        override fun get(): DateDomain {
+            return DateDomain(1, TimeDomain(15, 0))
         }
     })
     private val successConfigUseCase = object : UseCase<ConfigDomain> {
@@ -64,10 +63,13 @@ class PetListPresenterTest {
     private val expectedConfigDomain = ConfigDomain(
         isChatEnabled = true,
         isCallEnabled = true,
-        workingHours = WorkingHoursDomain(
+        workingHours = WorkHoursDomain(
             "M-F 9:00 - 18:00",
-            HourDomain(2, 9, 0),
-            HourDomain(6, 18, 0)
+            DateRangeDomain(
+                DayDomain.M, DayDomain.F,
+                TimeDomain(9, 0),
+                TimeDomain(18, 0)
+            )
         )
     )
     private val expectedPetDomain = listOf(
@@ -84,7 +86,7 @@ class PetListPresenterTest {
     fun `data presented on success data`() {
         val presenter = PetListPresenter(
             navigation,
-            checkWorkingHours,
+            checkWorkHours,
             successConfigUseCase,
             successPetListUseCase,
         )
@@ -103,7 +105,7 @@ class PetListPresenterTest {
     fun `empty data and error presented on error data`() {
         val presenter = PetListPresenter(
             navigation,
-            checkWorkingHours,
+            checkWorkHours,
             errorConfigUseCase,
             errorPetListUseCase
         )
@@ -152,7 +154,7 @@ class PetListPresenterTest {
 
         val presenter = PetListPresenter(
             navigation,
-            checkWorkingHours,
+            checkWorkHours,
             errorConfigUseCase,
             errorPetListUseCase
         )
@@ -189,7 +191,7 @@ class PetListPresenterTest {
     fun `should show any alert on call and chat`() {
         val presenter = PetListPresenter(
             navigation,
-            checkWorkingHours,
+            checkWorkHours,
             successConfigUseCase,
             successPetListUseCase,
         )
@@ -207,7 +209,7 @@ class PetListPresenterTest {
     fun `should show working alert on working data`() {
         val presenter = PetListPresenter(
             navigation,
-            checkWorkingHours,
+            checkWorkHours,
             successConfigUseCase,
             successPetListUseCase,
         )

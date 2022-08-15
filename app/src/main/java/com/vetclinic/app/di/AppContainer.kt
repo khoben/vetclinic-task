@@ -17,8 +17,8 @@ import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
 import com.vetclinic.app.domain.usecase.FetchConfigUseCase
 import com.vetclinic.app.domain.usecase.FetchPetsUseCase
-import com.vetclinic.app.domain.workinghours.CheckWorkingHours
-import com.vetclinic.app.domain.workinghours.CurrentHour
+import com.vetclinic.app.domain.workinghours.CheckWorkHours
+import com.vetclinic.app.domain.workinghours.CurrentDate
 import com.vetclinic.app.domain.workinghours.ParseWorkingHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.ui.list.ConfigMapper
@@ -67,8 +67,8 @@ class AppContainer(appContext: Context) : DiContainer {
         FetchPetsUseCase(petHttpService, PetListMapper())
     }
 
-    override val checkWorkingHours: CheckWorkingHours by lazy {
-        CheckWorkingHours.Base(CurrentHour.Base())
+    override val checkWorkHours: CheckWorkHours by lazy {
+        CheckWorkHours.Base(CurrentDate.Base())
     }
 
     override val fetchImage: FetchImage by lazy {

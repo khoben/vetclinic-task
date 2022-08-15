@@ -8,7 +8,7 @@ import com.vetclinic.app.common.ui.UiExecutor
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.workinghours.CheckWorkingHours
+import com.vetclinic.app.domain.workinghours.CheckWorkHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
 import java.util.concurrent.atomic.AtomicBoolean
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class PetListPresenter(
     private val navigation: Navigation.Route,
-    private val checkWorkingHours: CheckWorkingHours,
+    private val checkWorkHours: CheckWorkHours,
     private val fetchConfigUseCase: UseCase<ConfigDomain>,
     private val fetchPetsUseCase: UseCase<List<PetDomain>>,
     uiExecutor: UiExecutor = UiExecutor.Main()
@@ -96,7 +96,7 @@ class PetListPresenter(
     fun call() = checkHours { }
 
     private fun checkHours(doOnWorkingHours: () -> Unit) {
-        val isWorking = checkWorkingHours.check(_configObserver.value.workingHours)
+        val isWorking = checkWorkHours.check(_configObserver.value.workingHours)
         if (isWorking) {
             doOnWorkingHours()
         }

@@ -2,13 +2,13 @@ package com.vetclinic.app.ui.list
 
 import com.vetclinic.app.data.cloud.ConfigCloud
 import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.HourDomain
-import com.vetclinic.app.domain.WorkingHoursDomain
+import com.vetclinic.app.domain.date.*
 import com.vetclinic.app.domain.workinghours.ParseWorkingHours
 import org.junit.Assert
 import org.junit.Test
 
 class ConfigMapperTest {
+
     private val configMapper = ConfigMapper(ParseWorkingHours.Base())
 
     @Test
@@ -22,10 +22,13 @@ class ConfigMapperTest {
         val expected = ConfigDomain(
             isChatEnabled = true,
             isCallEnabled = true,
-            workingHours = WorkingHoursDomain(
+            workingHours = WorkHoursDomain(
                 "M-F 9:00 - 18:00",
-                HourDomain(2, 9, 0),
-                HourDomain(6, 18, 0)
+                DateRangeDomain(
+                    DayDomain.M, DayDomain.F,
+                    TimeDomain(9, 0),
+                    TimeDomain(18, 0)
+                )
             )
         )
 
