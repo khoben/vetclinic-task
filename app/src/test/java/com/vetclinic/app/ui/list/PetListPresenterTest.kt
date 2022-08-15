@@ -93,11 +93,11 @@ class PetListPresenterTest {
 
         Assert.assertEquals(
             expectedPetDomain,
-            presenter.listObserver.getOrAwaitValue()
+            presenter.listState.getOrAwaitValue()
         )
         Assert.assertEquals(
             expectedConfigDomain,
-            presenter.configObserver.getOrAwaitValue()
+            presenter.configState.getOrAwaitValue()
         )
     }
 
@@ -112,11 +112,11 @@ class PetListPresenterTest {
 
         Assert.assertEquals(
             emptyList<PetDomain>(),
-            presenter.listObserver.getOrAwaitValue()
+            presenter.listState.getOrAwaitValue()
         )
         Assert.assertEquals(
             ConfigDomain.EMPTY,
-            presenter.configObserver.getOrAwaitValue()
+            presenter.configState.getOrAwaitValue()
         )
         Assert.assertTrue(presenter.errors.getOrAwaitValue() is java.lang.RuntimeException)
         Assert.assertTrue(presenter.errorState.getOrAwaitValue())
@@ -161,11 +161,11 @@ class PetListPresenterTest {
 
         Assert.assertEquals(
             emptyList<PetDomain>(),
-            presenter.listObserver.getOrAwaitValue()
+            presenter.listState.getOrAwaitValue()
         )
         Assert.assertEquals(
             ConfigDomain.EMPTY,
-            presenter.configObserver.getOrAwaitValue()
+            presenter.configState.getOrAwaitValue()
         )
         Assert.assertTrue(presenter.errors.getOrAwaitValue() is java.lang.RuntimeException)
         Assert.assertTrue(presenter.errorState.getOrAwaitValue())
@@ -175,11 +175,11 @@ class PetListPresenterTest {
 
         Assert.assertEquals(
             expectedPetDomain,
-            presenter.listObserver.getOrAwaitValue()
+            presenter.listState.getOrAwaitValue()
         )
         Assert.assertEquals(
             expectedConfigDomain,
-            presenter.configObserver.getOrAwaitValue()
+            presenter.configState.getOrAwaitValue()
         )
         Assert.assertThrows(TimeoutException::class.java) {
             presenter.errors.getOrAwaitValue()

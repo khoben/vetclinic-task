@@ -59,14 +59,14 @@ class PetListFragment : BaseFragment<PetListFragmentLayoutBinding, PetListPresen
         binding.retryBtn.setOnClickListener { petListPresenter.retry() }
 
         withLifecycle {
-            +petListPresenter.configObserver.observe {
+            +petListPresenter.configState.observe {
                 binding.buttonSpacer.isVisible = it.isCallEnabled && it.isChatEnabled
                 binding.callBtn.isVisible = it.isCallEnabled
                 binding.chatBtn.isVisible = it.isChatEnabled
                 binding.workingHours.isVisible = it.workingHours.origin.isNotEmpty()
                 binding.workingHours.text = getString(R.string.office_hours, it.workingHours.origin)
             }
-            +petListPresenter.listObserver.observe { petAdapter.submitList(it) }
+            +petListPresenter.listState.observe { petAdapter.submitList(it) }
             +petListPresenter.loadingState.observe { binding.loading.isVisible = it }
             +petListPresenter.errorState.observe { binding.errorsLayout.isVisible = it }
             +petListPresenter.showAlert.observe { showAlert(it.title, it.message) }

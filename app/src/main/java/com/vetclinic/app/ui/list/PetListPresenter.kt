@@ -22,11 +22,11 @@ class PetListPresenter(
     uiExecutor: UiExecutor = UiExecutor.Main()
 ) : Presenter {
 
-    private val _configObserver = SingleStateLiveData(ConfigDomain.EMPTY, uiExecutor)
-    val configObserver get() = _configObserver.asDataObserver()
+    private val _configState = SingleStateLiveData(ConfigDomain.EMPTY, uiExecutor)
+    val configState get() = _configState.asDataObserver()
 
-    private val _listObserver = SingleStateLiveData(emptyList<PetDomain>(), uiExecutor)
-    val listObserver get() = _listObserver.asDataObserver()
+    private val _listState = SingleStateLiveData(emptyList<PetDomain>(), uiExecutor)
+    val listState get() = _listState.asDataObserver()
 
     private val _showAlert = SingleEventLiveData<PetListAlert>(uiExecutor)
     val showAlert get() = _showAlert.asDataObserver()
