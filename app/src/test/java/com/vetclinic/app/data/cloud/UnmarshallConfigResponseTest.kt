@@ -1,5 +1,6 @@
 package com.vetclinic.app.data.cloud
 
+import com.vetclinic.app.data.cloud.exceptions.InvalidConfigDataException
 import com.vetclinic.app.testing.mockJsonResponse
 import org.json.JSONException
 import org.junit.Assert
@@ -29,7 +30,7 @@ class UnmarshallConfigResponseTest {
         Assert.assertEquals(expected, actual)
     }
 
-    @Test(expected = JSONException::class)
+    @Test(expected = InvalidConfigDataException::class)
     fun testFailResponseUnmarshall() {
         unmarshallConfigResponse.unmarshall(
             mockJsonResponse(
@@ -43,7 +44,7 @@ class UnmarshallConfigResponseTest {
         )
     }
 
-    @Test(expected = JSONException::class)
+    @Test(expected = InvalidConfigDataException::class)
     fun testEmptyResponseUnmarshall() {
         unmarshallConfigResponse.unmarshall(
             mockJsonResponse("")

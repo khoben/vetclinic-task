@@ -1,6 +1,7 @@
 package com.vetclinic.app.data.cloud
 
 import com.vetclinic.app.common.network.exception.BadHttpServiceCall
+import com.vetclinic.app.data.cloud.exceptions.InvalidPetListDataException
 import com.vetclinic.app.testing.mockOkHttpClient
 import org.json.JSONException
 import org.junit.Assert
@@ -74,7 +75,7 @@ class PetHttpServiceTest {
         })
         countDownLatch.await(2000, TimeUnit.MILLISECONDS)
 
-        Assert.assertTrue(actualException is JSONException)
+        Assert.assertTrue(actualException is InvalidPetListDataException)
     }
 
     @Test

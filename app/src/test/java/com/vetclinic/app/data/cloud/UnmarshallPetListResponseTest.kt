@@ -1,5 +1,6 @@
 package com.vetclinic.app.data.cloud
 
+import com.vetclinic.app.data.cloud.exceptions.InvalidPetListDataException
 import com.vetclinic.app.testing.mockJsonResponse
 import org.json.JSONException
 import org.junit.Assert
@@ -38,7 +39,7 @@ class UnmarshallPetListResponseTest {
         Assert.assertEquals(expected, actual)
     }
 
-    @Test(expected = JSONException::class)
+    @Test(expected = InvalidPetListDataException::class)
     fun testFailResponseUnmarshall() {
         unmarshallPetResponse.unmarshall(
             mockJsonResponse(
@@ -57,7 +58,7 @@ class UnmarshallPetListResponseTest {
         )
     }
 
-    @Test(expected = JSONException::class)
+    @Test(expected = InvalidPetListDataException::class)
     fun testEmptyResponseUnmarshall() {
         unmarshallPetResponse.unmarshall(
             mockJsonResponse("")
