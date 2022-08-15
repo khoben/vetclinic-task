@@ -91,16 +91,12 @@ class PetListPresenter(
         navigation.to(Screen.Pet(petUri, petTitle))
     }
 
-    fun chat() = checkHours { }
+    fun chat() = checkHours()
 
-    fun call() = checkHours { }
+    fun call() = checkHours()
 
-    private fun checkHours(doOnWorkingHours: () -> Unit) {
-        val isWorking = checkWorkHours.check(_configObserver.value.workingHours)
-        if (isWorking) {
-            doOnWorkingHours()
-        }
-
+    private fun checkHours() {
+        val isWorking = checkWorkHours.check(_configState.value.workingHours)
         _showAlert.emit(
             PetListAlert(
                 R.string.alert_title,
