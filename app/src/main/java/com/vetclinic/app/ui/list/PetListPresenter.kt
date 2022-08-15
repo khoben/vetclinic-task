@@ -47,38 +47,44 @@ class PetListPresenter(
         fetch()
     }
 
-    private fun signalLoaded() {
+    private fun fetch() {
+        _loadingState.emit(true)
+
+        // TODO: maybe return Future<R> from use cases
+        //  to combine them and handle errors
+
+        fetchConfigUseCase.invoke({
+            _configState.emit(it)
+            onSourceLoaded()
+        }, {
+            _errors.emit(it)
+            _configState.emit(ConfigDomain.EMPTY)
+            onAnySourceFailed()
+        })
+
+        fetchPetsUseCase.invoke({
+            _listState.emit(it)
+            onSourceLoaded()
+        }, {
+            _errors.emit(it)
+            _listState.emit(emptyList())
+            onAnySourceFailed()
+        })
+    }
+
+    private fun onSourceLoaded() {
         if (loadedSources.incrementAndGet() >= TARGET_LOADED_SOURCES) {
             _loadingState.emit(false)
             loadedSources.set(0)
         }
     }
 
-    private fun signalError() {
+    private fun onAnySourceFailed() {
         if (isAnySourceFailed.compareAndSet(false, true)) {
             _errorState.emit(true)
             _loadingState.emit(false)
             loadedSources.set(0)
         }
-    }
-
-    private fun fetch() {
-        _loadingState.emit(true)
-        fetchConfigUseCase.invoke({
-            _configObserver.emit(it)
-            signalLoaded()
-        }, {
-            _errors.emit(it)
-            signalError()
-        })
-
-        fetchPetsUseCase.invoke({
-            _listObserver.emit(it)
-            signalLoaded()
-        }, {
-            _errors.emit(it)
-            signalError()
-        })
     }
 
     fun retry() {
