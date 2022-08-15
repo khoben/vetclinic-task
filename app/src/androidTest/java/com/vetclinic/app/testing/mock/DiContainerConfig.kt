@@ -1,17 +1,20 @@
 package com.vetclinic.app.testing.mock
 
 import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.date.DateDomain
 import com.vetclinic.app.domain.PetDomain
+import com.vetclinic.app.domain.date.*
 
 data class DiContainerConfig(
     val mockedConfig: ConfigDomain = ConfigDomain(
         isChatEnabled = true,
         isCallEnabled = true,
-        workingHours = WorkingHoursDomain(
+        workingHours = WorkHoursDomain(
             "M-F 9:00 - 18:00",
-            DateDomain(2, 9, 0),
-            DateDomain(6, 18, 0)
+            DateRangeDomain(
+                DayDomain.M, DayDomain.F,
+                TimeDomain(9, 0),
+                TimeDomain(18, 0)
+            )
         )
     ),
     val mockedPetList: List<PetDomain> = listOf(
