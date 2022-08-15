@@ -22,7 +22,7 @@ interface ImageLoadStrategy {
 
     class Memory(
         private val memoryCache: ImageCache.Memory,
-        private var next: ImageLoadStrategy?
+        private val next: ImageLoadStrategy? = null
     ) : ImageLoadStrategy {
         override fun proceed(
             url: String,
@@ -39,14 +39,14 @@ interface ImageLoadStrategy {
 
             next?.proceed(url, targetSize, onResult) { result ->
                 memoryCache.store(url, result)
-            }
+            } ?: onResult.invoke(memoryCachedImage)
         }
     }
 
     class Persistence(
         private val persistenceCache: ImageCache.Persistence,
         private val executorService: ExecutorService,
-        private var next: ImageLoadStrategy?
+        private val next: ImageLoadStrategy? = null
     ) : ImageLoadStrategy {
 
         override fun proceed(
@@ -67,7 +67,7 @@ interface ImageLoadStrategy {
                 next?.proceed(url, targetSize, onResult) { result ->
                     onBackwardResult.invoke(result)
                     persistenceCache.store(url, result)
-                }
+                } ?: onResult.invoke(persistenceCacheImage)
             }
         }
     }
