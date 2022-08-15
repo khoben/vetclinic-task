@@ -58,6 +58,7 @@ class PetListPresenter(
         if (isAnySourceFailed.compareAndSet(false, true)) {
             _errorState.emit(true)
             _loadingState.emit(false)
+            loadedSources.set(0)
         }
     }
 
