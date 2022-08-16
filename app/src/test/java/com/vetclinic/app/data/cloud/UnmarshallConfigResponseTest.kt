@@ -2,7 +2,6 @@ package com.vetclinic.app.data.cloud
 
 import com.vetclinic.app.data.cloud.exceptions.InvalidConfigDataException
 import com.vetclinic.app.testing.mockJsonResponse
-import org.json.JSONException
 import org.junit.Assert
 import org.junit.Test
 

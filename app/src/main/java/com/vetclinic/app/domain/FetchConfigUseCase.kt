@@ -1,10 +1,9 @@
-package com.vetclinic.app.domain.usecase
+package com.vetclinic.app.domain
 
 import com.vetclinic.app.common.network.HttpService
 import com.vetclinic.app.common.ui.Mapper
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.data.cloud.ConfigCloud
-import com.vetclinic.app.domain.ConfigDomain
 
 class FetchConfigUseCase(
     private val configService: HttpService<ConfigCloud>,

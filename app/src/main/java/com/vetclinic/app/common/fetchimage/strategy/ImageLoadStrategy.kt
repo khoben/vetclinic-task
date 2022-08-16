@@ -1,10 +1,10 @@
 package com.vetclinic.app.common.fetchimage.strategy
 
 import android.graphics.Bitmap
-import android.util.Size
 import com.vetclinic.app.common.fetchimage.cache.ImageCache
 import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import com.vetclinic.app.common.fetchimage.exception.UnsuccessfulImageRequest
+import com.vetclinic.app.common.fetchimage.target.TargetSize
 import com.vetclinic.app.common.network.MakeRequest
 import okhttp3.OkHttpClient
 import timber.log.Timber
@@ -15,7 +15,7 @@ interface ImageLoadStrategy {
 
     fun proceed(
         url: String,
-        targetSize: Size,
+        targetSize: TargetSize,
         onResult: (result: Bitmap?) -> Unit,
         onBackwardResult: (result: Bitmap) -> Unit = {}
     )
@@ -26,7 +26,7 @@ interface ImageLoadStrategy {
     ) : ImageLoadStrategy {
         override fun proceed(
             url: String,
-            targetSize: Size,
+            targetSize: TargetSize,
             onResult: (result: Bitmap?) -> Unit,
             onBackwardResult: (result: Bitmap) -> Unit
         ) {
@@ -51,7 +51,7 @@ interface ImageLoadStrategy {
 
         override fun proceed(
             url: String,
-            targetSize: Size,
+            targetSize: TargetSize,
             onResult: (result: Bitmap?) -> Unit,
             onBackwardResult: (result: Bitmap) -> Unit
         ) {
@@ -79,7 +79,7 @@ interface ImageLoadStrategy {
 
         override fun proceed(
             url: String,
-            targetSize: Size,
+            targetSize: TargetSize,
             onResult: (result: Bitmap?) -> Unit,
             onBackwardResult: (result: Bitmap) -> Unit
         ) {

@@ -2,7 +2,10 @@ package com.vetclinic.app.testing.mock
 
 import com.vetclinic.app.domain.ConfigDomain
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.date.*
+import com.vetclinic.app.domain.date.DateRangeDomain
+import com.vetclinic.app.domain.date.DayDomain
+import com.vetclinic.app.domain.date.TimeDomain
+import com.vetclinic.app.domain.date.WorkHoursDomain
 
 data class DiContainerConfig(
     val mockedConfig: ConfigDomain = ConfigDomain(

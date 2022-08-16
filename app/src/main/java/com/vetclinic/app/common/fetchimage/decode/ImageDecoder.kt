@@ -2,8 +2,9 @@ package com.vetclinic.app.common.fetchimage.decode
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Size
 import com.vetclinic.app.common.fetchimage.exception.ImageDecoderException
+import com.vetclinic.app.common.fetchimage.target.ComputeScale
+import com.vetclinic.app.common.fetchimage.target.TargetSize
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
@@ -11,11 +12,10 @@ import java.io.InputStream
 interface ImageDecoder<T> {
     fun decode(source: T): Bitmap?
 
-    fun decode(source: T, targetSize: Size): Bitmap?
+    fun decode(source: T, targetSize: TargetSize): Bitmap?
 
-    class FileDecoder : ImageDecoder<File?> {
-        override fun decode(source: File?): Bitmap? {
-            if (source == null || !source.exists()) return null
+    class FileDecoder : ImageDecoder<File> {
+        override fun decode(source: File): Bitmap? {
             try {
                 return FileInputStream(source).use { BitmapFactory.decodeStream(it) }
             } catch (e: Exception) {
@@ -23,7 +23,7 @@ interface ImageDecoder<T> {
             }
         }
 
-        override fun decode(source: File?, targetSize: Size): Bitmap? {
+        override fun decode(source: File, targetSize: TargetSize): Bitmap? {
             throw NotImplementedError(
                 "FileDecoder can read only origin size, use FileDecoder.decode(File?)"
             )
@@ -37,11 +37,12 @@ interface ImageDecoder<T> {
 
         override fun decode(source: InputStream): Bitmap? {
             throw NotImplementedError(
-                "StreamDecoder can read only scaled size, use FileDecoder.decode(InputStream, Size)"
+                "StreamDecoder can read only scaled size, " +
+                        "use FileDecoder.decode(InputStream, ImageSize)"
             )
         }
 
-        override fun decode(source: InputStream, targetSize: Size): Bitmap? {
+        override fun decode(source: InputStream, targetSize: TargetSize): Bitmap? {
             try {
                 val tmp = tempFile.create()
                 tmp.outputStream().use { source.copyTo(it) }
@@ -56,7 +57,7 @@ interface ImageDecoder<T> {
 
                 val targetScale =
                     computeScale.getScale(
-                        Size(sizeBitmapOpts.outWidth, sizeBitmapOpts.outHeight),
+                        TargetSize(sizeBitmapOpts.outWidth, sizeBitmapOpts.outHeight),
                         targetSize
                     )
 

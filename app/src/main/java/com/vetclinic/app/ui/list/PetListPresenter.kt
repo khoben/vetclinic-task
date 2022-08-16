@@ -1,6 +1,7 @@
 package com.vetclinic.app.ui.list
 
 import com.vetclinic.app.R
+import com.vetclinic.app.common.async.CombinedCallback
 import com.vetclinic.app.common.observer.SingleEventLiveData
 import com.vetclinic.app.common.observer.SingleStateLiveData
 import com.vetclinic.app.common.ui.Presenter
@@ -11,8 +12,6 @@ import com.vetclinic.app.domain.PetDomain
 import com.vetclinic.app.domain.workinghours.CheckWorkHours
 import com.vetclinic.app.navigation.Navigation
 import com.vetclinic.app.navigation.Screen
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
 
 class PetListPresenter(
     private val navigation: Navigation.Route,
@@ -40,9 +39,6 @@ class PetListPresenter(
     private val _errors = SingleEventLiveData<Throwable>(uiExecutor)
     val errors get() = _errors.asDataObserver()
 
-    private val loadedSources = AtomicInteger(0)
-    private val isAnySourceFailed = AtomicBoolean(false)
-
     init {
         fetch()
     }
@@ -50,45 +46,23 @@ class PetListPresenter(
     private fun fetch() {
         _loadingState.emit(true)
 
-        // TODO: maybe return Future<R> from use cases
-        //  to combine them and handle errors
+        CombinedCallback(
+            fetchConfigUseCase::invoke,
+            fetchPetsUseCase::invoke
+        ).invoke(onResult = { (config, list) ->
+            _configState.emit(config)
+            _listState.emit(list)
 
-        fetchConfigUseCase.invoke({
-            _configState.emit(it)
-            onSourceLoaded()
-        }, {
-            _errors.emit(it)
-            _configState.emit(ConfigDomain.EMPTY)
-            onAnySourceFailed()
-        })
-
-        fetchPetsUseCase.invoke({
-            _listState.emit(it)
-            onSourceLoaded()
-        }, {
-            _errors.emit(it)
-            _listState.emit(emptyList())
-            onAnySourceFailed()
-        })
-    }
-
-    private fun onSourceLoaded() {
-        if (loadedSources.incrementAndGet() >= TARGET_LOADED_SOURCES) {
             _loadingState.emit(false)
-            loadedSources.set(0)
-        }
-    }
-
-    private fun onAnySourceFailed() {
-        if (isAnySourceFailed.compareAndSet(false, true)) {
+        }, onError = { error ->
+            _errors.emit(error)
             _errorState.emit(true)
+
             _loadingState.emit(false)
-            loadedSources.set(0)
-        }
+        })
     }
 
     fun retry() {
-        isAnySourceFailed.set(false)
         _errorState.emit(false)
         fetch()
     }
@@ -112,9 +86,5 @@ class PetListPresenter(
                     R.string.alert_not_working_hours
             )
         )
-    }
-
-    companion object {
-        private const val TARGET_LOADED_SOURCES = 2
     }
 }

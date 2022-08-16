@@ -1,10 +1,9 @@
-package com.vetclinic.app.domain.usecase
+package com.vetclinic.app.domain
 
 import com.vetclinic.app.common.network.HttpService
 import com.vetclinic.app.common.ui.Mapper
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.data.cloud.PetCloud
-import com.vetclinic.app.domain.PetDomain
 
 class FetchPetsUseCase(
     private val petService: HttpService<List<PetCloud>>,

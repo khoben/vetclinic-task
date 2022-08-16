@@ -3,6 +3,7 @@ package com.vetclinic.app.common.fetchimage.cache
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.LruCache
+import com.vetclinic.app.common.extensions.deleteRecursivelyWithoutRoot
 import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import timber.log.Timber
 import java.io.File
@@ -21,7 +22,7 @@ interface ImageCache {
     class FileImageCache(
         context: Context,
         private val keyHash: KeyHash,
-        private val imageDecoder: ImageDecoder<File?>,
+        private val imageDecoder: ImageDecoder<File>,
         dirName: String = "imgcache"
     ) : Persistence {
 
@@ -41,7 +42,11 @@ interface ImageCache {
 
         override fun store(key: String, image: Bitmap) {
             try {
-                FileOutputStream(File(cacheFolder, keyHash.hash(key))).use {
+                val file = File(cacheFolder, keyHash.hash(key))
+                if (file.exists()) {
+                    file.delete()
+                }
+                FileOutputStream(file).use {
                     image.compress(Bitmap.CompressFormat.JPEG, DEFAULT_QUALITY, it)
                 }
             } catch (e: Exception) {
@@ -50,7 +55,7 @@ interface ImageCache {
         }
 
         override fun clear() {
-            cacheFolder.deleteRecursively()
+            cacheFolder.deleteRecursivelyWithoutRoot()
         }
 
         companion object {

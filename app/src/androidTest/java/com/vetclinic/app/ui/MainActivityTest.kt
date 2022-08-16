@@ -2,15 +2,18 @@ package com.vetclinic.app.ui
 
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.launchActivity
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.model.Atoms.getCurrentUrl
+import androidx.test.espresso.web.sugar.Web.onWebView
 import com.vetclinic.app.domain.PetDomain
 import com.vetclinic.app.testing.AppFlowTest
+import com.vetclinic.app.testing.mock.MockDiContainer
 import com.vetclinic.app.testing.viewassertions.RecyclerViewItemCountAssertion
 import com.vetclinic.app.ui.list.PetListFragment
 import com.vetclinic.app.ui.pet.PetFragment
@@ -19,18 +22,18 @@ import org.junit.Assert
 import org.junit.Test
 
 
-class MainActivityTest : AppFlowTest() {
+class MainActivityTest : AppFlowTest(MainActivity::class, amountIdlingResources = 2) {
 
     @Test
     fun checkIfActivityIsLaunched() {
-        launchActivity<MainActivity>().use {
+        launch {
             onView(withId(com.vetclinic.app.R.id.container)).check(matches(isDisplayed()))
         }
     }
 
     @Test
     fun checkIfPetListFragmentPresentedOnStart() {
-        launchActivity<MainActivity>().use { scenario ->
+        launch { scenario ->
             scenario.onActivity { activity ->
                 Assert.assertTrue(
                     activity.supportFragmentManager.findFragmentByTag(PetListFragment.TAG) != null
@@ -40,19 +43,33 @@ class MainActivityTest : AppFlowTest() {
     }
 
     @Test
-    fun shouldShowDataOnSuccessData() {
-
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+    fun shouldConfigAndPetListDisplayed() {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(isDisplayed()))
-            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(withSubstring("M-F 9:00 - 18:00")))
-            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(1))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(
+                matches(
+                    withSubstring(
+                        MockDiContainer.config.mockedConfig.workingHours.origin
+                    )
+                )
+            )
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(
+                RecyclerViewItemCountAssertion(
+                    MockDiContainer.config.mockedPetList.size
+                )
+            )
         }
     }
 
     @Test
-    fun shouldShowErrorOnInvalidBothData() {
+    fun shouldNotShowErrorState() {
+        launchWithIdling {
+            onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(not(isDisplayed())))
+        }
+    }
+
+    @Test
+    fun shouldShowErrorStateOnErrorBothData() {
         updateDiConfig {
             copy(
                 isConfigError = true,
@@ -60,25 +77,25 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(isDisplayed()))
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(0))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(not(isDisplayed())))
         }
     }
 
     @Test
-    fun shouldShowErrorOnInvalidConfigData() {
+    fun shouldShowErrorStateOnErrorConfigData() {
         updateDiConfig {
             copy(
                 isConfigError = true
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(isDisplayed()))
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(0))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(not(isDisplayed())))
         }
     }
 
@@ -90,10 +107,10 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(isDisplayed()))
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(0))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(not(isDisplayed())))
         }
     }
 
@@ -106,9 +123,7 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(isDisplayed()))
 
             updateDiConfig {
@@ -122,15 +137,25 @@ class MainActivityTest : AppFlowTest() {
 
             onView(withId(com.vetclinic.app.R.id.errors_layout)).check(matches(not(isDisplayed())))
             onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(isDisplayed()))
-            onView(withId(com.vetclinic.app.R.id.working_hours)).check(matches(withSubstring("M-F 9:00 - 18:00")))
-            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(1))
+            onView(withId(com.vetclinic.app.R.id.working_hours)).check(
+                matches(
+                    withSubstring(
+                        MockDiContainer.config.mockedConfig.workingHours.origin
+                    )
+                )
+            )
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(
+                RecyclerViewItemCountAssertion(
+                    MockDiContainer.config.mockedPetList.size
+                )
+            )
         }
     }
 
     @Test
     fun shouldOpenPetFragmentOnClickListItem() {
-
         val expectedPetName = "Pet Name"
+        val expectedContentUrl = "https://en.m.wikipedia.org/wiki/Rabbit"
 
         updateDiConfig {
             copy(
@@ -138,16 +163,18 @@ class MainActivityTest : AppFlowTest() {
                     PetDomain(
                         imageUrl = "image",
                         title = expectedPetName,
-                        contentUrl = "https://google.com"
+                        contentUrl = expectedContentUrl
                     )
                 )
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use { scenario ->
-            onView(withId(com.vetclinic.app.R.id.pet_list)).check(RecyclerViewItemCountAssertion(1))
+        launchWithIdling { scenario ->
+            onView(withId(com.vetclinic.app.R.id.pet_list)).check(
+                RecyclerViewItemCountAssertion(
+                    MockDiContainer.config.mockedPetList.size
+                )
+            )
             onView(withId(com.vetclinic.app.R.id.pet_list)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
@@ -166,47 +193,19 @@ class MainActivityTest : AppFlowTest() {
                     withParent(withResourceName("action_bar"))
                 )
             ).check(matches(withText(expectedPetName)))
-        }
-    }
 
-    @Test
-    fun shouldShowAlertOnCallClicked() {
+            // WebView is visible
+            onView(withId(com.vetclinic.app.R.id.web_view)).check(matches(isDisplayed()))
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
-            onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(isDisplayed()))
-            onView(withId(com.vetclinic.app.R.id.call_btn)).perform(click())
-
-            // check alert
-            onView(withText(com.vetclinic.app.R.string.alert_title))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()))
-        }
-    }
-
-    @Test
-    fun shouldShowAlertOnChatClicked() {
-
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
-            onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(isDisplayed()))
-            onView(withId(com.vetclinic.app.R.id.chat_btn)).perform(click())
-
-            // check alert
-            onView(withText(com.vetclinic.app.R.string.alert_title))
-                .inRoot(isDialog())
-                .check(matches(isDisplayed()))
+            // WebView loaded expected URL
+            onWebView()
+                .check(webMatches(getCurrentUrl(), containsString(expectedContentUrl)))
         }
     }
 
     @Test
     fun shouldShowWorkingAlertOnChatClickedWithWorkingHours() {
-
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(isDisplayed()))
             onView(withId(com.vetclinic.app.R.id.chat_btn)).perform(click())
 
@@ -223,14 +222,11 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldShowNoWorkingAlertOnChatClickedWithNoWorkingHours() {
-
         updateDiConfig {
             copy(isWorkingHours = false)
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(isDisplayed()))
             onView(withId(com.vetclinic.app.R.id.chat_btn)).perform(click())
 
@@ -247,10 +243,7 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldShowWorkingAlertOnCallClickedWithWorkingHours() {
-
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(isDisplayed()))
             onView(withId(com.vetclinic.app.R.id.call_btn)).perform(click())
 
@@ -267,14 +260,11 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldShowNoWorkingAlertOnCallClickedWithNoWorkingHours() {
-
         updateDiConfig {
             copy(isWorkingHours = false)
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(isDisplayed()))
             onView(withId(com.vetclinic.app.R.id.call_btn)).perform(click())
 
@@ -291,7 +281,6 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldCallButtonNotDisplayed() {
-
         updateDiConfig {
             copy(
                 mockedConfig = mockedConfig.copy(
@@ -300,9 +289,7 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(not(isDisplayed())))
             onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(isDisplayed()))
         }
@@ -310,7 +297,6 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldChatButtonNotDisplayed() {
-
         updateDiConfig {
             copy(
                 mockedConfig = mockedConfig.copy(
@@ -319,9 +305,7 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(not(isDisplayed())))
             onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(isDisplayed()))
         }
@@ -329,7 +313,6 @@ class MainActivityTest : AppFlowTest() {
 
     @Test
     fun shouldChatAndCallButtonNotDisplayed() {
-
         updateDiConfig {
             copy(
                 mockedConfig = mockedConfig.copy(
@@ -339,9 +322,7 @@ class MainActivityTest : AppFlowTest() {
             )
         }
 
-        waitForResourcesLoaded(2)
-
-        launchActivity<MainActivity>().use {
+        launchWithIdling {
             onView(withId(com.vetclinic.app.R.id.chat_btn)).check(matches(not(isDisplayed())))
             onView(withId(com.vetclinic.app.R.id.call_btn)).check(matches(not(isDisplayed())))
         }

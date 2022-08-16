@@ -3,7 +3,6 @@ package com.vetclinic.app.data.cloud
 import com.vetclinic.app.common.network.exception.BadHttpServiceCall
 import com.vetclinic.app.data.cloud.exceptions.InvalidPetListDataException
 import com.vetclinic.app.testing.mockOkHttpClient
-import org.json.JSONException
 import org.junit.Assert
 import org.junit.Test
 import java.util.concurrent.CountDownLatch

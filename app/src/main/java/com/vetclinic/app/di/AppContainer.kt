@@ -5,18 +5,18 @@ import com.vetclinic.app.R
 import com.vetclinic.app.common.fetchimage.FetchImage
 import com.vetclinic.app.common.fetchimage.cache.ImageCache
 import com.vetclinic.app.common.fetchimage.cache.KeyHash
-import com.vetclinic.app.common.fetchimage.decode.ComputeScale
 import com.vetclinic.app.common.fetchimage.decode.ImageDecoder
 import com.vetclinic.app.common.fetchimage.decode.TempFile
 import com.vetclinic.app.common.fetchimage.strategy.ImageLoadStrategy
+import com.vetclinic.app.common.fetchimage.target.ComputeScale
 import com.vetclinic.app.common.fetchimage.target.GetTargetSize
 import com.vetclinic.app.common.network.HttpService
 import com.vetclinic.app.common.ui.UseCase
 import com.vetclinic.app.data.cloud.*
 import com.vetclinic.app.domain.ConfigDomain
+import com.vetclinic.app.domain.FetchConfigUseCase
+import com.vetclinic.app.domain.FetchPetsUseCase
 import com.vetclinic.app.domain.PetDomain
-import com.vetclinic.app.domain.usecase.FetchConfigUseCase
-import com.vetclinic.app.domain.usecase.FetchPetsUseCase
 import com.vetclinic.app.domain.workinghours.CheckWorkHours
 import com.vetclinic.app.domain.workinghours.CurrentDate
 import com.vetclinic.app.domain.workinghours.ParseWorkingHours
@@ -87,7 +87,7 @@ class AppContainer(appContext: Context) : DiContainer {
                         okHttpClient = provideOkHttpClient(),
                         streamImageDecoder = ImageDecoder.StreamDecoder(
                             tempFile = TempFile.Cache(appContext),
-                            computeScale = ComputeScale.Factor2()
+                            computeScale = ComputeScale.KeepAspectRatio()
                         )
                     )
                 )

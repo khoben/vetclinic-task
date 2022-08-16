@@ -2,7 +2,10 @@ package com.vetclinic.app.ui.list
 
 import com.vetclinic.app.data.cloud.ConfigCloud
 import com.vetclinic.app.domain.ConfigDomain
-import com.vetclinic.app.domain.date.*
+import com.vetclinic.app.domain.date.DateRangeDomain
+import com.vetclinic.app.domain.date.DayDomain
+import com.vetclinic.app.domain.date.TimeDomain
+import com.vetclinic.app.domain.date.WorkHoursDomain
 import com.vetclinic.app.domain.workinghours.ParseWorkingHours
 import org.junit.Assert
 import org.junit.Test
